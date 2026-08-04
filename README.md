@@ -15,4 +15,4 @@ Expand all / Collapse all buttons
 Live count of visible questions
 Customizing
 
-All content lives in the DATA array in the <script> block — each entry is { category, items: [{ q, level, a }] }. Add, edit, or reorder entries there; the UI renders automatically. a accepts HTML (including <pre><code> blocks for code samples).
+All content lives in the DATA array in the <script> block — each entry is { category, items: [{ q, level, a }] }. Add, edit, or reorder entries there; the UI renders automatically. a accepts HTML.
