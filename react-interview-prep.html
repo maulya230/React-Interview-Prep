@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>React Interview Prep</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --panel: #1e293b;
+    --panel-hover: #253548;
+    --accent: #61dafb;
+    --accent-dark: #2196c9;
+    --text: #e2e8f0;
+    --text-dim: #94a3b8;
+    --border: #334155;
+    --code-bg: #0b1220;
+    --easy: #22c55e;
+    --medium: #f59e0b;
+    --hard: #ef4444;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
+    color: var(--text);
+    padding: 24px 16px 60px;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 28px; }
+  header h1 {
+    font-size: 2rem;
+    margin: 0 0 6px;
+    background: linear-gradient(90deg, #61dafb, #a78bfa);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  header p { color: var(--text-dim); margin: 0; font-size: 0.95rem; }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin: 18px 0 8px;
+  }
+  .controls input[type="text"] {
+    flex: 1 1 220px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+  }
+  .controls button {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+  }
+  .controls button:hover { background: var(--panel-hover); }
+  .controls button.active { background: var(--accent-dark); border-color: var(--accent); color: #fff; }
+
+  .progress {
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+  }
+  .progress span { color: var(--accent); font-weight: 600; }
+
+  .category {
+    margin-bottom: 30px;
+  }
+  .category h2 {
+    font-size: 1.1rem;
+    color: var(--accent);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+  }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .card.open { border-color: var(--accent); }
+
+  .q {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    color: var(--text);
+    padding: 14px 16px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .q:hover { background: var(--panel-hover); }
+  .q .qtext { display: flex; align-items: baseline; gap: 10px; }
+  .q .num { color: var(--text-dim); font-size: 0.8rem; min-width: 22px; }
+  .badge {
+    font-size: 0.68rem;
+    padding: 2px 8px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .badge.easy { background: rgba(34,197,94,0.15); color: var(--easy); }
+  .badge.medium { background: rgba(245,158,11,0.15); color: var(--medium); }
+  .badge.hard { background: rgba(239,68,68,0.15); color: var(--hard); }
+
+  .chevron {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    transition: transform 0.2s;
+    color: var(--text-dim);
+  }
+  .card.open .chevron { transform: rotate(180deg); color: var(--accent); }
+
+  .a {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+  }
+  .a-inner {
+    padding: 0 16px 16px;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+  }
+  .a-inner p { margin: 0 0 10px; }
+  .a-inner ul { margin: 0 0 10px; padding-left: 20px; }
+  .a-inner li { margin-bottom: 4px; }
+  .a-inner strong { color: var(--text); }
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    overflow-x: auto;
+    margin: 8px 0;
+    font-size: 0.82rem;
+  }
+  code {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    color: #93c5fd;
+  }
+  .a-inner code:not(pre code) {
+    background: var(--code-bg);
+    padding: 1px 5px;
+    border-radius: 4px;
+    color: #f0abfc;
+  }
+
+  footer {
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    margin-top: 40px;
+  }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>⚛ React Interview Prep</h1>
+    <p>Click any question to reveal the answer. Search or filter by difficulty below.</p>
+  </header>
+
+  <div class="controls">
+    <input type="text" id="search" placeholder="Search questions (e.g. hooks, useEffect, redux)..." />
+    <button data-filter="all" class="active">All</button>
+    <button data-filter="easy">Easy</button>
+    <button data-filter="medium">Medium</button>
+    <button data-filter="hard">Hard</button>
+    <button id="expandAll">Expand all</button>
+    <button id="collapseAll">Collapse all</button>
+  </div>
+  <div class="progress"><span id="visibleCount">0</span> / <span id="totalCount">0</span> questions shown</div>
+
+  <div id="content"></div>
+
+  <footer>Good luck with your interview 🚀 — built for quick review &amp; debugging practice.</footer>
+</div>
+
+<script>
+const DATA = [
+{
+  category: "Fundamentals",
+  items: [
+    {
+      q: "What is React and what problem does it solve?",
+      level: "easy",
+      a: `<p>React is a <strong>declarative, component-based JavaScript library</strong> for building user interfaces, created by Facebook. Instead of manually updating the DOM, you describe <em>what</em> the UI should look like for a given state, and React figures out <em>how</em> to update the DOM efficiently.</p>
+      <p>It solves the problem of complex, error-prone manual DOM manipulation by introducing a <strong>virtual DOM</strong> and a reusable <strong>component model</strong>, making UIs predictable and easier to reason about, test, and scale.</p>`
+    },
+    {
+      q: "What is the Virtual DOM and how does reconciliation work?",
+      level: "medium",
+      a: `<p>The <strong>Virtual DOM (VDOM)</strong> is a lightweight JavaScript object representation of the real DOM. When state changes, React creates a new VDOM tree and compares ("diffs") it against the previous tree — this process is called <strong>reconciliation</strong>.</p>
+      <ul>
+        <li>React uses a <strong>diffing algorithm</strong> that compares elements of the same type by updating attributes, and replaces elements entirely if the type changes.</li>
+        <li><strong>Keys</strong> help React identify which list items changed, were added, or removed without re-rendering the whole list.</li>
+        <li>Only the actual differences ("patches") are applied to the real DOM, minimizing expensive DOM operations.</li>
+      </ul>
+      <p>Since React 18, this is powered by the <strong>Fiber</strong> architecture, which makes reconciliation interruptible and prioritizable.</p>`
+    },
+    {
+      q: "What is JSX and how does it get converted to JavaScript?",
+      level: "easy",
+      a: `<p>JSX is a syntax extension that lets you write HTML-like markup inside JavaScript. It's <strong>not valid JS on its own</strong> — a compiler like Babel transpiles it into <code>React.createElement()</code> calls.</p>
+      <pre><code>// JSX
+const el = &lt;h1 className="title"&gt;Hello&lt;/h1&gt;;
+
+// Compiles to:
+const el = React.createElement("h1", { className: "title" }, "Hello");</code></pre>
+      <p>Since React 17+, the new JSX transform can compile this without needing <code>React</code> imported in scope, using <code>react/jsx-runtime</code> internally.</p>`
+    },
+    {
+      q: "Difference between functional and class components?",
+      level: "easy",
+      a: `<p><strong>Class components</strong> use ES6 classes, <code>this.state</code>, lifecycle methods (<code>componentDidMount</code>, etc.), and require binding methods.</p>
+      <p><strong>Functional components</strong> are plain functions that use <strong>Hooks</strong> (<code>useState</code>, <code>useEffect</code>) to manage state and side effects. They're now the standard because they're:</p>
+      <ul>
+        <li>Simpler and shorter — no <code>this</code> confusion</li>
+        <li>Easier to test and compose logic (custom hooks)</li>
+        <li>Better optimized by the React team going forward (concurrent features target hooks-based code)</li>
+      </ul>`
+    },
+    {
+      q: "What are props vs state?",
+      level: "easy",
+      a: `<p><strong>Props</strong> are read-only data passed <em>from a parent to a child</em> component — the child cannot modify them. They make components reusable and configurable.</p>
+      <p><strong>State</strong> is data managed <em>internally</em> by a component that can change over time (via <code>useState</code>/<code>setState</code>) and triggers a re-render when updated.</p>
+      <p>Rule of thumb: <strong>props flow down, state lives where it changes.</strong></p>`
+    }
+  ]
+},
+{
+  category: "Hooks",
+  items: [
+    {
+      q: "How does useState work under the hood?",
+      level: "medium",
+      a: `<p><code>useState</code> returns a stateful value and a setter function. On the initial render, React initializes the state; on subsequent renders, it returns the current value from its internal <strong>fiber's memoized state list</strong> (a linked list tied to that component instance).</p>
+      <pre><code>const [count, setCount] = useState(0);
+setCount(count + 1);
+setCount(prev => prev + 1); // preferred for updates depending on prev value</code></pre>
+      <p>Key gotchas:</p>
+      <ul>
+        <li>State updates are <strong>asynchronous/batched</strong> — don't rely on the variable updating immediately after calling the setter.</li>
+        <li>Hooks must be called in the <strong>same order every render</strong> — never inside conditionals or loops.</li>
+        <li>Updating state with the same value (<code>Object.is</code> check) bails out of re-rendering.</li>
+      </ul>`
+    },
+    {
+      q: "Explain useEffect and its dependency array.",
+      level: "medium",
+      a: `<p><code>useEffect</code> runs side effects (data fetching, subscriptions, manual DOM changes) <strong>after</strong> the render is committed to the screen.</p>
+      <pre><code>useEffect(() => {
+  const id = setInterval(tick, 1000);
+  return () => clearInterval(id); // cleanup
+}, [dependency]);</code></pre>
+      <ul>
+        <li><strong>No array</strong>: runs after every render.</li>
+        <li><strong>Empty array <code>[]</code></strong>: runs once on mount (and cleanup on unmount).</li>
+        <li><strong>[dep1, dep2]</strong>: runs when any dependency changes (shallow comparison).</li>
+        <li>The <strong>return function</strong> is the cleanup, run before the next effect execution or on unmount.</li>
+      </ul>
+      <p>Common bug: missing dependencies causing stale closures — the <code>eslint-plugin-react-hooks</code> rule catches this.</p>`
+    },
+    {
+      q: "useEffect vs useLayoutEffect — what's the difference?",
+      level: "hard",
+      a: `<p>Both run side effects after render, but the timing differs:</p>
+      <ul>
+        <li><strong>useEffect</strong>: runs <em>asynchronously</em> after the browser has painted the screen. Doesn't block visual updates.</li>
+        <li><strong>useLayoutEffect</strong>: runs <em>synchronously</em> after DOM mutations but <strong>before</strong> the browser paints. Blocks painting until it finishes.</li>
+      </ul>
+      <p>Use <code>useLayoutEffect</code> only when you need to <strong>measure the DOM</strong> (e.g., element dimensions/scroll position) and adjust it before the user sees a flicker. Overusing it can hurt performance since it's blocking.</p>`
+    },
+    {
+      q: "When would you use useMemo vs useCallback?",
+      level: "medium",
+      a: `<p>Both memoize values between renders to avoid unnecessary recomputation, but return different things:</p>
+      <ul>
+        <li><code>useMemo(fn, deps)</code> memoizes the <strong>return value</strong> of a computation.</li>
+        <li><code>useCallback(fn, deps)</code> memoizes the <strong>function reference itself</strong> (it's actually <code>useMemo(() => fn, deps)</code> under the hood).</li>
+      </ul>
+      <pre><code>const expensiveValue = useMemo(() => computeHeavy(data), [data]);
+const handleClick = useCallback(() => doSomething(id), [id]);</code></pre>
+      <p>Use them to prevent expensive recalculations or to keep referential equality stable — important when passing callbacks to memoized children (<code>React.memo</code>) to avoid breaking that memoization.</p>
+      <p><strong>Don't overuse them</strong> — memoization itself has a cost; only add it when you've identified an actual performance problem.</p>`
+    },
+    {
+      q: "What is useRef used for, and how is it different from state?",
+      level: "medium",
+      a: `<p><code>useRef</code> returns a mutable object (<code>{ current: value }</code>) that <strong>persists across renders without causing a re-render</strong> when changed.</p>
+      <p>Common uses:</p>
+      <ul>
+        <li>Accessing DOM nodes directly (e.g., focusing an input)</li>
+        <li>Storing a mutable value that shouldn't trigger re-render (e.g., a timer ID, previous value, render count)</li>
+      </ul>
+      <pre><code>const inputRef = useRef(null);
+&lt;input ref={inputRef} /&gt;
+inputRef.current.focus();</code></pre>
+      <p>Difference from state: updating a ref does <strong>not</strong> re-render the component; updating state does.</p>`
+    },
+    {
+      q: "What are the Rules of Hooks and why do they exist?",
+      level: "medium",
+      a: `<p>Two core rules:</p>
+      <ul>
+        <li><strong>Only call hooks at the top level</strong> — never inside loops, conditions, or nested functions.</li>
+        <li><strong>Only call hooks from React functions</strong> — components or custom hooks, not regular JS functions.</li>
+      </ul>
+      <p>Why: React relies on the <strong>call order</strong> of hooks to correctly associate state between renders (it's essentially an array/linked list indexed by call order). Breaking the order desyncs which state belongs to which <code>useState</code>/<code>useEffect</code> call, causing bugs that are hard to trace.</p>`
+    },
+    {
+      q: "How do you build a custom hook? Give an example.",
+      level: "medium",
+      a: `<p>A custom hook is just a JS function whose name starts with <code>use</code> and that calls other hooks internally to share reusable stateful logic.</p>
+      <pre><code>function useWindowWidth() {
+  const [width, setWidth] = useState(window.innerWidth);
+  useEffect(() => {
+    const onResize = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+  return width;
+}
+
+// usage
+const width = useWindowWidth();</code></pre>
+      <p>Custom hooks let you extract and reuse logic (data fetching, form handling, subscriptions) across components without changing the component tree (unlike HOCs/render props).</p>`
+    }
+  ]
+},
+{
+  category: "Performance & Rendering",
+  items: [
+    {
+      q: "Why does a component re-render, and how do you prevent unnecessary ones?",
+      level: "medium",
+      a: `<p>A component re-renders when:</p>
+      <ul>
+        <li>Its <strong>state</strong> changes</li>
+        <li>Its <strong>parent</strong> re-renders (by default, children re-render too, even if props are unchanged)</li>
+        <li>Its <strong>context</strong> value changes</li>
+      </ul>
+      <p>To prevent unnecessary re-renders:</p>
+      <ul>
+        <li><code>React.memo()</code> — skips re-render if props are shallow-equal</li>
+        <li><code>useMemo</code>/<code>useCallback</code> — keep prop references stable</li>
+        <li>Move state down to the smallest component that needs it (<strong>state colocation</strong>)</li>
+        <li>Split context providers so unrelated updates don't re-render everything</li>
+      </ul>`
+    },
+    {
+      q: "What is React.memo and when should you use it?",
+      level: "medium",
+      a: `<p><code>React.memo</code> is a higher-order component that memoizes a component's rendered output — it skips re-rendering if props haven't changed (shallow comparison).</p>
+      <pre><code>const Row = React.memo(function Row({ item }) {
+  return &lt;li&gt;{item.name}&lt;/li&gt;;
+});</code></pre>
+      <p>Use it for components that render often with the same props, especially in long lists or when the parent re-renders frequently for unrelated reasons. It's not a silver bullet — if props are new objects/functions every render, memo won't help unless combined with <code>useMemo</code>/<code>useCallback</code>.</p>`
+    },
+    {
+      q: "Why are keys important in lists, and what happens if you use index as a key?",
+      level: "medium",
+      a: `<p>Keys give React a stable identity for each list item across renders so it can correctly match old elements to new ones during reconciliation, instead of re-creating DOM nodes.</p>
+      <p>Using the array <strong>index as a key</strong> is risky when the list can be reordered, filtered, or items inserted/removed from the middle — React may match the wrong item to the wrong state (e.g., an input's value or a component's internal state "sticking" to the wrong row), causing bugs and unnecessary DOM re-creation.</p>
+      <p>Best practice: use a <strong>stable, unique ID</strong> from your data (like a database id), not the index.</p>`
+    },
+    {
+      q: "What is code-splitting and how do you implement it with React.lazy?",
+      level: "medium",
+      a: `<p>Code-splitting breaks your bundle into smaller chunks loaded on demand, reducing initial load time. React supports this via dynamic <code>import()</code> combined with <code>React.lazy</code> and <code>Suspense</code>.</p>
+      <pre><code>const Settings = React.lazy(() => import("./Settings"));
+
+function App() {
+  return (
+    &lt;Suspense fallback={&lt;Spinner /&gt;}&gt;
+      &lt;Settings /&gt;
+    &lt;/Suspense&gt;
+  );
+}</code></pre>
+      <p>This is typically applied at the route level (e.g. with React Router) so each page loads only the JS it needs.</p>`
+    },
+    {
+      q: "What is the React Fiber architecture?",
+      level: "hard",
+      a: `<p><strong>Fiber</strong> is React's internal reconciliation engine (rewritten in React 16) that represents the component tree as a tree of "fiber" nodes — plain JS objects holding work info for each component.</p>
+      <p>It enables:</p>
+      <ul>
+        <li><strong>Incremental rendering</strong> — splitting rendering work into chunks that can be paused, resumed, or aborted</li>
+        <li><strong>Prioritization</strong> — urgent updates (typing, clicks) can interrupt lower-priority ones (e.g. offscreen rendering)</li>
+        <li>The foundation for <strong>Concurrent Mode</strong> features like <code>useTransition</code> and <code>Suspense</code></li>
+      </ul>
+      <p>You rarely interact with Fiber directly, but it explains why React 18+ can do things like time-slicing and interruptible rendering.</p>`
+    }
+  ]
+},
+{
+  category: "State Management & Context",
+  items: [
+    {
+      q: "What is prop drilling and how does Context solve it?",
+      level: "easy",
+      a: `<p><strong>Prop drilling</strong> is passing data through many layers of components that don't need it themselves, just to get it to a deeply nested child.</p>
+      <p><code>Context</code> lets you share values (theme, auth user, locale) across the component tree without manually passing props at every level:</p>
+      <pre><code>const ThemeContext = createContext("light");
+
+function App() {
+  return (
+    &lt;ThemeContext.Provider value="dark"&gt;
+      &lt;Toolbar /&gt;
+    &lt;/ThemeContext.Provider&gt;
+  );
+}
+
+function Toolbar() {
+  const theme = useContext(ThemeContext);
+  return &lt;div&gt;{theme}&lt;/div&gt;;
+}</code></pre>
+      <p>Caveat: any component consuming a context re-renders whenever the provider's value changes — so don't put frequently-changing, unrelated data in one giant context.</p>`
+    },
+    {
+      q: "When would you reach for Redux (or similar) instead of Context?",
+      level: "medium",
+      a: `<p>Context is great for simple, low-frequency global values (theme, auth). Redux (or Zustand, Jotai, Recoil) shines when you need:</p>
+      <ul>
+        <li><strong>Complex, frequently-updated state</strong> shared across many disconnected components (Context re-renders all consumers on any change; Redux + selectors avoid that)</li>
+        <li><strong>Predictable state transitions</strong> via actions/reducers, useful for debugging (time-travel, Redux DevTools)</li>
+        <li><strong>Middleware</strong> for side effects (thunk/saga for async logic, logging, persistence)</li>
+      </ul>
+      <p>Modern consensus: use local state/Context by default; reach for a state library only when app complexity genuinely demands centralized, optimized global state.</p>`
+    },
+    {
+      q: "Explain the useReducer hook and when to prefer it over useState.",
+      level: "medium",
+      a: `<p><code>useReducer</code> manages state via a reducer function <code>(state, action) => newState</code>, similar to Redux but local to a component.</p>
+      <pre><code>function reducer(state, action) {
+  switch (action.type) {
+    case "increment": return { count: state.count + 1 };
+    case "decrement": return { count: state.count - 1 };
+    default: throw new Error();
+  }
+}
+
+const [state, dispatch] = useReducer(reducer, { count: 0 });
+dispatch({ type: "increment" });</code></pre>
+      <p>Prefer it over multiple <code>useState</code> calls when: state transitions are complex, several pieces of state update together, or the next state depends on the previous state/action type — it keeps update logic centralized and testable.</p>`
+    }
+  ]
+},
+{
+  category: "Component Patterns",
+  items: [
+    {
+      q: "What is a Higher-Order Component (HOC)?",
+      level: "medium",
+      a: `<p>An HOC is a function that takes a component and returns a new, enhanced component — a pattern for reusing component logic.</p>
+      <pre><code>function withLoading(Component) {
+  return function Wrapped({ isLoading, ...props }) {
+    if (isLoading) return &lt;Spinner /&gt;;
+    return &lt;Component {...props} /&gt;;
+  };
+}
+
+const UserListWithLoading = withLoading(UserList);</code></pre>
+      <p>Common examples: <code>connect()</code> in Redux, <code>withRouter</code> in older React Router. Downsides: "wrapper hell" (deeply nested component trees) and naming/prop collisions — largely superseded by custom hooks today.</p>`
+    },
+    {
+      q: "What is the render props pattern?",
+      level: "medium",
+      a: `<p>Render props is a pattern where a component takes a <strong>function as a prop</strong> (often called <code>children</code> or <code>render</code>) that returns JSX, letting the consumer control what gets rendered while the component provides the logic/data.</p>
+      <pre><code>function MouseTracker({ render }) {
+  const [pos, setPos] = useState({ x: 0, y: 0 });
+  return (
+    &lt;div onMouseMove={e => setPos({ x: e.clientX, y: e.clientY })}&gt;
+      {render(pos)}
+    &lt;/div&gt;
+  );
+}
+
+// usage
+&lt;MouseTracker render={({ x, y }) => &lt;p&gt;{x}, {y}&lt;/p&gt;} /&gt;</code></pre>
+      <p>Like HOCs, this pattern is largely replaced by custom hooks in modern codebases since hooks avoid the extra nesting.</p>`
+    },
+    {
+      q: "What are controlled vs uncontrolled components?",
+      level: "easy",
+      a: `<p><strong>Controlled</strong>: form input's value is driven by React state — every keystroke updates state via <code>onChange</code>, and the input's <code>value</code> comes from that state. Gives full control/validation but re-renders on every change.</p>
+      <pre><code>&lt;input value={value} onChange={e => setValue(e.target.value)} /&gt;</code></pre>
+      <p><strong>Uncontrolled</strong>: the DOM itself holds the value; you read it on demand via a <code>ref</code>, similar to plain HTML forms.</p>
+      <pre><code>&lt;input ref={inputRef} defaultValue="hello" /&gt;
+// later: inputRef.current.value</code></pre>
+      <p>Uncontrolled is simpler for basic/large forms with less need for live validation; controlled is preferred when you need instant validation, conditional formatting, or to sync with other UI.</p>`
+    },
+    {
+      q: "How do Error Boundaries work?",
+      level: "medium",
+      a: `<p>Error boundaries are components that catch JavaScript errors in their child component tree during rendering, in lifecycle methods, and in constructors — and render a fallback UI instead of crashing the whole app.</p>
+      <pre><code>class ErrorBoundary extends React.Component {
+  state = { hasError: false };
+  static getDerivedStateFromError() { return { hasError: true }; }
+  componentDidCatch(error, info) { logError(error, info); }
+  render() {
+    if (this.state.hasError) return &lt;h2&gt;Something went wrong.&lt;/h2&gt;;
+    return this.props.children;
+  }
+}</code></pre>
+      <p>Important: they must currently be <strong>class components</strong> (no hook equivalent exists yet), and they do <strong>not</strong> catch errors in event handlers, async code, or server-side rendering.</p>`
+    },
+    {
+      q: "What is Suspense and how is it used for data fetching?",
+      level: "hard",
+      a: `<p><code>Suspense</code> lets components "wait" for something (like a lazily-loaded component or, with frameworks/libraries that support it, async data) before rendering, showing a fallback UI in the meantime.</p>
+      <pre><code>&lt;Suspense fallback={&lt;Spinner /&gt;}&gt;
+  &lt;ProfilePage /&gt;
+&lt;/Suspense&gt;</code></pre>
+      <p>Originally used with <code>React.lazy</code> for code-splitting. React 18+ extends this to data fetching via frameworks (Next.js, Relay) and the new <code>use()</code> hook, letting components "throw" a promise that Suspense catches and waits on, enabling patterns like streaming server rendering.</p>`
+    }
+  ]
+},
+{
+  category: "Lifecycle & Class Components (legacy but still asked)",
+  items: [
+    {
+      q: "What are the main React lifecycle methods and their Hook equivalents?",
+      level: "medium",
+      a: `<p>Class lifecycle → Hooks equivalent:</p>
+      <ul>
+        <li><code>constructor</code> → initialize state directly in <code>useState</code></li>
+        <li><code>componentDidMount</code> → <code>useEffect(() => {...}, [])</code></li>
+        <li><code>componentDidUpdate</code> → <code>useEffect(() => {...}, [deps])</code></li>
+        <li><code>componentWillUnmount</code> → the cleanup function returned from <code>useEffect</code></li>
+        <li><code>shouldComponentUpdate</code> → <code>React.memo</code> / manual comparison</li>
+        <li><code>getDerivedStateFromError</code> / <code>componentDidCatch</code> → no hook equivalent (still needs a class-based Error Boundary)</li>
+      </ul>`
+    },
+    {
+      q: "What is the difference between componentDidMount, componentDidUpdate, and componentWillUnmount?",
+      level: "easy",
+      a: `<ul>
+        <li><strong>componentDidMount</strong>: runs once, right after the component is first rendered to the DOM — ideal for initial data fetching or subscriptions.</li>
+        <li><strong>componentDidUpdate(prevProps, prevState)</strong>: runs after every re-render (except the first) — used to react to prop/state changes (must guard with a comparison to avoid infinite loops).</li>
+        <li><strong>componentWillUnmount</strong>: runs right before the component is removed from the DOM — used for cleanup (clearing timers, unsubscribing).</li>
+      </ul>`
+    }
+  ]
+},
+{
+  category: "Debugging & Common Pitfalls",
+  items: [
+    {
+      q: "Why did my state update not reflect immediately after calling the setter?",
+      level: "medium",
+      a: `<p>State updates are <strong>batched and asynchronous</strong> — React schedules a re-render rather than mutating state synchronously. So logging the state variable right after calling the setter shows the <em>old</em> value.</p>
+      <pre><code>const [count, setCount] = useState(0);
+function handleClick() {
+  setCount(count + 1);
+  console.log(count); // logs OLD value, not the updated one
+}</code></pre>
+      <p>Fix: use the updater function form if you need to chain off the latest value, or rely on <code>useEffect</code> to react once the new value is committed.</p>`
+    },
+    {
+      q: "Why is my useEffect running in an infinite loop?",
+      level: "medium",
+      a: `<p>Usually because the effect updates state that is also in its own dependency array, or a dependency (object/array/function) is <strong>recreated on every render</strong>, so the dependency comparison always sees it as "changed."</p>
+      <pre><code>// Bug: options is a new object every render → effect always re-runs → setState → re-render → repeat
+useEffect(() => {
+  fetchData(options).then(setData);
+}, [options]); // options = { page: 1 } created inline in render</code></pre>
+      <p>Fixes: memoize the dependency with <code>useMemo</code>/<code>useCallback</code>, move the object outside the component if static, or narrow the dependency to primitive values (<code>options.page</code> instead of <code>options</code>).</p>`
+    },
+    {
+      q: "\"Cannot update a component while rendering a different component\" — what causes this warning?",
+      level: "hard",
+      a: `<p>This happens when you call <code>setState</code> of one component <strong>synchronously during the render phase</strong> of another (e.g., calling a parent's setter directly in a child's render body, not inside an event handler or effect).</p>
+      <p>Fix: move the state update into an event handler or a <code>useEffect</code>, so it happens after render/commit rather than during it.</p>`
+    },
+    {
+      q: "Why do I get 'Each child in a list should have a unique key prop'?",
+      level: "easy",
+      a: `<p>React needs a <code>key</code> to track list items across re-renders efficiently and correctly. This warning appears when rendering an array of elements (usually via <code>.map()</code>) without a <code>key</code> attribute.</p>
+      <pre><code>{items.map(item => (
+  &lt;li key={item.id}&gt;{item.name}&lt;/li&gt; // add a stable, unique key
+))}</code></pre>
+      <p>Ignoring it can cause subtle bugs in list reordering/insertion, not just console noise.</p>`
+    },
+    {
+      q: "How do you debug unnecessary re-renders in a React app?",
+      level: "hard",
+      a: `<p>Practical approach:</p>
+      <ul>
+        <li>Use <strong>React DevTools Profiler</strong> to record a session and see which components rendered and why (it shows "why did this render" hints).</li>
+        <li>Add temporary <code>console.log</code> in the component body, or use the <code>why-did-you-render</code> library to flag avoidable re-renders.</li>
+        <li>Check for <strong>new object/array/function literals</strong> passed as props on every render (breaks <code>React.memo</code>/shallow comparisons).</li>
+        <li>Check for <strong>context providers</strong> whose value object is recreated every render.</li>
+        <li>Wrap expensive children in <code>React.memo</code> and stabilize their props with <code>useMemo</code>/<code>useCallback</code> only where profiling shows it matters.</li>
+      </ul>`
+    }
+  ]
+}
+];
+
+// ---------- Render ----------
+const content = document.getElementById("content");
+let totalQuestions = 0;
+
+DATA.forEach((cat, ci) => {
+  const catDiv = document.createElement("div");
+  catDiv.className = "category";
+  catDiv.dataset.category = cat.category;
+
+  const h2 = document.createElement("h2");
+  h2.textContent = cat.category;
+  catDiv.appendChild(h2);
+
+  cat.items.forEach((item, qi) => {
+    totalQuestions++;
+    const card = document.createElement("div");
+    card.className = "card";
+    card.dataset.level = item.level;
+    card.dataset.search = (item.q + " " + item.a).toLowerCase();
+
+    const btn = document.createElement("button");
+    btn.className = "q";
+    btn.innerHTML = `
+      <span class="qtext">
+        <span class="num">${ci + 1}.${qi + 1}</span>
+        <span>${item.q}</span>
+      </span>
+      <span style="display:flex;align-items:center;gap:8px;">
+        <span class="badge ${item.level}">${item.level}</span>
+        <svg class="chevron" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+      </span>
+    `;
+
+    const answerWrap = document.createElement("div");
+    answerWrap.className = "a";
+    const inner = document.createElement("div");
+    inner.className = "a-inner";
+    inner.innerHTML = item.a;
+    answerWrap.appendChild(inner);
+
+    btn.addEventListener("click", () => {
+      const isOpen = card.classList.contains("open");
+      if (isOpen) {
+        card.classList.remove("open");
+        answerWrap.style.maxHeight = null;
+      } else {
+        card.classList.add("open");
+        answerWrap.style.maxHeight = answerWrap.scrollHeight + "px";
+      }
+    });
+
+    card.appendChild(btn);
+    card.appendChild(answerWrap);
+    catDiv.appendChild(card);
+  });
+
+  content.appendChild(catDiv);
+});
+
+document.getElementById("totalCount").textContent = totalQuestions;
+
+// ---------- Filtering ----------
+const searchInput = document.getElementById("search");
+const filterButtons = document.querySelectorAll(".controls button[data-filter]");
+let activeLevel = "all";
+
+function applyFilters() {
+  const term = searchInput.value.trim().toLowerCase();
+  let visible = 0;
+
+  document.querySelectorAll(".category").forEach(catDiv => {
+    let anyVisibleInCat = false;
+    catDiv.querySelectorAll(".card").forEach(card => {
+      const matchesLevel = activeLevel === "all" || card.dataset.level === activeLevel;
+      const matchesSearch = !term || card.dataset.search.includes(term);
+      const show = matchesLevel && matchesSearch;
+      card.classList.toggle("hidden", !show);
+      if (show) { visible++; anyVisibleInCat = true; }
+    });
+    catDiv.classList.toggle("hidden", !anyVisibleInCat);
+  });
+
+  document.getElementById("visibleCount").textContent = visible;
+}
+
+searchInput.addEventListener("input", applyFilters);
+filterButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    filterButtons.forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    activeLevel = btn.dataset.filter;
+    applyFilters();
+  });
+});
+
+document.getElementById("expandAll").addEventListener("click", () => {
+  document.querySelectorAll(".card:not(.hidden)").forEach(card => {
+    card.classList.add("open");
+    const a = card.querySelector(".a");
+    a.style.maxHeight = a.scrollHeight + "px";
+  });
+});
+document.getElementById("collapseAll").addEventListener("click", () => {
+  document.querySelectorAll(".card").forEach(card => {
+    card.classList.remove("open");
+    card.querySelector(".a").style.maxHeight = null;
+  });
+});
+
+applyFilters();
+</script>
+</body>
+</html>
